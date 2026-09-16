@@ -1,5 +1,9 @@
 package main
 
+import (
+	"fmt"
+)
+
 type Soldat struct {
 	nom     string
 	vie     int
@@ -64,6 +68,33 @@ func compterFaibles(equipe [6]Soldat) int {
 	return compteur
 }
 
+func attaquerEquipe(equipe *[6]Soldat, degats int) {
+	for i := range equipe {
+		vieAvantAttaque := equipe[i].vie
+		equipe[i].vie -= degats
+		if equipe[i].vie < 0 {
+			equipe[i].vie = 0
+		}
+		if vieAvantAttaque > 0 && equipe[i].vie == 0 {
+			println(equipe[i].nom, "est KO !")
+		}
+	}
+}
+
+func afficherEtat(equipe [6]Soldat) {
+	println("==== ETAT DE L'EQUIPE ====")
+	println()
+	for _, soldat := range equipe {
+		println("Nom:", soldat.nom)
+		if soldat.vie == 0 {
+			println("Vie: KO")
+		} else {
+			println("Vie:", soldat.vie)
+		}
+		println()
+	}
+}
+
 func main() {
 	afficherEquipe()
 	soldatPlusDeVie := trouverPlusDeVie(equipe)
@@ -84,5 +115,18 @@ func main() {
 	println()
 	println("Soldats avec moins de 800 PV:")
 	println("Nombre:", compterFaibles(equipe))
-
+	println()
+	choix := 1
+	for choix == 1 {
+		var degats int
+		fmt.Print("Combien de dégâts voulez-vous infliger ? ")
+		fmt.Scan(&degats)
+		if degats < 0 {
+			degats = 0
+		}
+		attaquerEquipe(&equipe, degats)
+		fmt.Print("Voulez-vous répéter l'attaque ? (1 = oui, 2 = non) ")
+		fmt.Scan(&choix)
+	}
+	afficherEtat(equipe)
 }
