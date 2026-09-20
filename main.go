@@ -87,6 +87,19 @@ func afficherEtat(equipe [6]Soldat) {
 	}
 }
 
+func compterVivants(equipe [6]Soldat, index int) int {
+	if index == len(equipe) {
+		return 0
+	}
+
+	vivants := 0
+	if equipe[index].vie > 0 {
+		vivants = 1
+	}
+
+	return vivants + compterVivants(equipe, index+1)
+}
+
 func main() {
 	afficherEquipe()
 	soldatPlusDeVie := trouverPlusDeVie(equipe)
@@ -127,5 +140,7 @@ func main() {
 		attaquerEquipe(&equipe, degats)
 		fmt.Printf("\n=== APRÈS L'ATTAQUE %d ===\n\n", attaque)
 		afficherEtat(equipe)
+		fmt.Println()
+		fmt.Printf("Soldats vivants : %d\n", compterVivants(equipe, 0))
 	}
 }
