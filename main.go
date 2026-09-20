@@ -70,28 +70,20 @@ func compterFaibles(equipe [6]Soldat) int {
 
 func attaquerEquipe(equipe *[6]Soldat, degats int) {
 	for i := range equipe {
-		vieAvantAttaque := equipe[i].vie
 		equipe[i].vie -= degats
 		if equipe[i].vie < 0 {
 			equipe[i].vie = 0
-		}
-		if vieAvantAttaque > 0 && equipe[i].vie == 0 {
-			println(equipe[i].nom, "est KO !")
 		}
 	}
 }
 
 func afficherEtat(equipe [6]Soldat) {
-	println("==== ETAT DE L'EQUIPE ====")
-	println()
 	for _, soldat := range equipe {
-		println("Nom:", soldat.nom)
 		if soldat.vie == 0 {
-			println("Vie: KO")
+			fmt.Printf("%s : KO\n", soldat.nom)
 		} else {
-			println("Vie:", soldat.vie)
+			fmt.Printf("%s : %d PV\n", soldat.nom, soldat.vie)
 		}
-		println()
 	}
 }
 
@@ -116,17 +108,24 @@ func main() {
 	println("Soldats avec moins de 800 PV:")
 	println("Nombre:", compterFaibles(equipe))
 	println()
-	choix := 1
-	for choix == 1 {
+	fmt.Println("=== BATAILLE ===")
+	fmt.Println()
+	var nombreAttaques int
+	fmt.Print("Nombre d'attaques ennemies : ")
+	fmt.Scan(&nombreAttaques)
+	if nombreAttaques < 0 {
+		nombreAttaques = 0
+	}
+
+	for attaque := 1; attaque <= nombreAttaques; attaque++ {
 		var degats int
-		fmt.Print("Combien de dégâts voulez-vous infliger ? ")
+		fmt.Printf("\nAttaque %d : ", attaque)
 		fmt.Scan(&degats)
 		if degats < 0 {
 			degats = 0
 		}
 		attaquerEquipe(&equipe, degats)
-		fmt.Print("Voulez-vous répéter l'attaque ? (1 = oui, 2 = non) ")
-		fmt.Scan(&choix)
+		fmt.Printf("\n=== APRÈS L'ATTAQUE %d ===\n\n", attaque)
+		afficherEtat(equipe)
 	}
-	afficherEtat(equipe)
 }
